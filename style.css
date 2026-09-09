@@ -144,6 +144,8 @@ input:focus, select:focus, .seg-btn:focus-visible, .primary-btn:focus-visible, .
 .score-readout { display: flex; justify-content: center; align-items: baseline; gap: 4px; margin-top: -25px; }
 .score-number { color: #fff; font: 700 58px var(--font-mono); }
 .score-max { color: rgba(234,243,238,.6); font: 15px var(--font-mono); }
+.score-placeholder { margin: 8px 0 0; color: rgba(234,243,238,.62); font-size: 11px; }
+.score-placeholder[hidden] { display: none; }
 .report-summary { padding-left: 28px; border-left: 1px solid rgba(234,243,238,.22); }
 .summary-label { color: #b9dbc7; font-size: 10px; }
 .score-band { margin: 11px 0 8px; color: #fff; font: italic 31px var(--font-display); }

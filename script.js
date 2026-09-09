@@ -21,11 +21,13 @@
   const scoreNumber = document.getElementById("score-number");
   const scoreBand = document.getElementById("score-band");
   const scoreContext = document.getElementById("score-context");
+  const scorePlaceholder = document.getElementById("score-placeholder");
   const gaugeFill = document.getElementById("gauge-fill");
   const errorLabel = document.getElementById("error-label");
   const errorCopy = document.getElementById("error-copy");
   const gaugeLength = 314;
   let currentStep = 1;
+  let scoreAnimationFrame = null;
 
   function drawTicks() {
     document.querySelectorAll(".gauge-ticks").forEach((group) => {
@@ -188,10 +190,39 @@
     if (suggestions.length < 2) suggestions.push("Keep noticing which routines help you feel rested, focused and connected.");
     document.getElementById("suggestion-list").innerHTML = suggestions.slice(0, 3).map((suggestion) => `<div class="suggestion"><span aria-hidden="true">+</span><p>${suggestion}</p></div>`).join("");
   }
+  function resetResultVisual() {
+    if (scoreAnimationFrame) cancelAnimationFrame(scoreAnimationFrame);
+    scoreAnimationFrame = null;
+    scoreNumber.textContent = "\u2014";
+    scorePlaceholder.hidden = false;
+    scoreBand.textContent = "-";
+    scoreContext.textContent = "";
+    gaugeFill.style.transition = "none";
+    gaugeFill.style.strokeDashoffset = String(gaugeLength);
+    report.hidden = true;
+  }
+  function animateScore(score) {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reducedMotion) {
+      scoreNumber.textContent = score.toFixed(2);
+      return;
+    }
+    const duration = 850;
+    const startedAt = performance.now();
+    const tick = (now) => {
+      const progress = Math.min(1, (now - startedAt) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      scoreNumber.textContent = (score * eased).toFixed(2);
+      if (progress < 1) scoreAnimationFrame = requestAnimationFrame(tick);
+      else scoreAnimationFrame = null;
+    };
+    scoreAnimationFrame = requestAnimationFrame(tick);
+  }
   function renderResult(score, payload) {
     const clamped = Math.max(0, Math.min(10, score));
     const band = bandFor(clamped);
-    scoreNumber.textContent = score.toFixed(2);
+    scorePlaceholder.hidden = true;
+    scoreNumber.textContent = "0.00";
     scoreBand.textContent = band.label;
     scoreContext.textContent = band.context;
     document.getElementById("result-explanation").textContent = band.explanation;
@@ -201,9 +232,10 @@
     gaugeFill.style.strokeDashoffset = String(gaugeLength);
     report.hidden = false;
     requestAnimationFrame(() => { gaugeFill.style.transition = ""; gaugeFill.style.strokeDashoffset = String(gaugeLength * (1 - Math.max(0.1, clamped / 10))); });
+    animateScore(score);
     report.scrollIntoView({ behavior: "smooth", block: "start" });
   }
-  function showMessage(title, copy) { errorLabel.textContent = title; errorCopy.textContent = copy; messageSection.hidden = false; messageSection.scrollIntoView({ behavior: "smooth", block: "start" }); }
+  function showMessage(title, copy) { resetResultVisual(); errorLabel.textContent = title; errorCopy.textContent = copy; messageSection.hidden = false; messageSection.scrollIntoView({ behavior: "smooth", block: "start" }); }
   function applyServerErrors(detail) {
     if (!Array.isArray(detail)) return;
     detail.forEach((item) => {
@@ -212,7 +244,7 @@
       if (input) setFieldError(input, item.msg || "Please enter a valid value.");
     });
   }
-  function resetAssessment() { form.reset(); stressInput.value = ""; stressGroup.querySelectorAll(".seg-btn").forEach((button) => button.classList.remove("active")); clearAllErrors(); messageSection.hidden = true; report.hidden = true; updateStep(1); document.getElementById("age").focus(); }
+  function resetAssessment() { form.reset(); stressInput.value = ""; stressGroup.querySelectorAll(".seg-btn").forEach((button) => button.classList.remove("active")); clearAllErrors(); messageSection.hidden = true; resetResultVisual(); updateStep(1); document.getElementById("age").focus(); }
 
   addStudentQuestions("Academic routine", studentQuestionGroups.academic);
   addStudentQuestions("Perceived stress", studentQuestionGroups.lifestyle);
@@ -226,7 +258,7 @@
     const assessmentState = collectAssessmentState(); const errors = validate(assessmentState);
     if (errors.length) { errors.forEach(([input, message]) => setFieldError(input, message)); errors[0][0]?.focus(); return; }
     const payload = collectPayload();
-    submitBtn.disabled = true; submitBtn.classList.add("loading"); document.querySelector(".assessment-shell").classList.add("is-loading");
+    submitBtn.disabled = true; submitBtn.classList.add("loading"); resetResultVisual(); document.querySelector(".assessment-shell").classList.add("is-loading");
     try {
       const response = await fetch(`${API_BASE}/predict`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       if (response.status === 422) { const body = await response.json().catch(() => null); applyServerErrors(body?.detail); showMessage("Check your inputs", "The model rejected a few fields. Review the highlighted details and try again."); return; }
