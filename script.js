@@ -117,11 +117,15 @@
   function renderSuggestions(payload) {
     const suggestions = [];
     if (payload.sleep_hours_per_night < 7) suggestions.push("Try maintaining a more consistent sleep schedule when your week allows.");
+    else suggestions.push("Keep a consistent sleep schedule where possible to protect your recovery time.");
     if (payload.avg_daily_usage_hours >= 6) suggestions.push("Consider taking short breaks during long screen sessions.");
+    else suggestions.push("Continue pairing screen time with regular breaks to give your attention room to reset.");
     if (payload.physical_activity_hours < 0.5) suggestions.push("Regular movement throughout the day can support overall wellbeing.");
     if (["High", "Very High"].includes(payload.stress_level)) suggestions.push("Consider building short recovery periods into your study routine.");
-    if (!suggestions.length) suggestions.push("Keep noticing which routines help you feel rested, focused and connected.");
-    document.getElementById("suggestion-list").innerHTML = suggestions.map((suggestion) => `<div class="suggestion"><span aria-hidden="true">+</span><p>${suggestion}</p></div>`).join("");
+    if (payload.study_hours >= 6) suggestions.push("Try breaking longer study blocks into smaller sessions with brief pauses.");
+    if (payload.daily_unlocks >= 80) suggestions.push("Consider setting a few phone-free moments during study or wind-down time.");
+    if (suggestions.length < 2) suggestions.push("Keep noticing which routines help you feel rested, focused and connected.");
+    document.getElementById("suggestion-list").innerHTML = suggestions.slice(0, 3).map((suggestion) => `<div class="suggestion"><span aria-hidden="true">+</span><p>${suggestion}</p></div>`).join("");
   }
   function renderResult(score, payload) {
     const clamped = Math.max(0, Math.min(10, score));
