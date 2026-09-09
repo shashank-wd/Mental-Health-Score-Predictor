@@ -170,22 +170,6 @@ input:focus, select:focus, .seg-btn:focus-visible, .primary-btn:focus-visible, .
 .site-footer strong { color: var(--pine-deep); font-size: 12px; }
 .site-footer span, .site-footer p { margin: 3px 0 0; font: 10px/1.6 var(--font-mono); }
 .site-footer p { text-align: right; }
-.model-information, .about-project { padding-top: 18px; padding-bottom: 72px; }
-.model-information .section-heading, .about-project .section-heading { align-items: end; margin-bottom: 24px; }
-.section-intro { max-width: 390px; margin: 0 0 2px; color: var(--ink-soft); font-size: 13px; line-height: 1.65; }
-.model-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.model-card, .about-card { padding: 18px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); box-shadow: 0 8px 20px -18px rgba(24, 36, 32, .24); }
-.model-card { min-height: 145px; }
-.model-card-wide { grid-column: span 2; }
-.model-card span, .about-card span { display: block; margin-bottom: 9px; color: var(--pine); font: 10px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
-.model-card strong { display: block; color: var(--pine-deep); font-size: 15px; line-height: 1.35; }
-.model-card p, .about-card p { margin: 9px 0 0; color: var(--ink-soft); font-size: 12px; line-height: 1.6; }
-.model-card code { padding: 2px 4px; border-radius: 4px; background: var(--paper-deep); color: var(--pine-deep); font: 10px var(--font-mono); overflow-wrap: anywhere; }
-.about-project { border-top: 1px solid var(--line); }
-.about-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.about-card { min-height: 135px; }
-.about-card-purpose { background: var(--pine-tint); border-color: #cfe1d5; }
-.about-card-purpose span { color: var(--pine-deep); }
 @media (max-width: 780px) {
   .hero { grid-template-columns: 1fr; gap: 35px; min-height: auto; padding-top: 52px; padding-bottom: 65px; }
   .hero-note { justify-self: start; max-width: 420px; }
@@ -193,8 +177,6 @@ input:focus, select:focus, .seg-btn:focus-visible, .primary-btn:focus-visible, .
   .report-summary { padding: 24px 0 0; border-top: 1px solid rgba(234,243,238,.22); border-left: 0; }
   .score-context { max-width: 420px; }
   .disclaimer { gap: 18px; }
-  .model-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .model-card-wide { grid-column: span 2; }
 }
 @media (max-width: 600px) {
   .site-header { padding: 18px 16px; }
@@ -227,10 +209,5 @@ input:focus, select:focus, .seg-btn:focus-visible, .primary-btn:focus-visible, .
   .message-card .secondary-btn { margin-left: 58px; }
   .site-footer { flex-direction: column; padding: 20px 16px 28px; }
   .site-footer p { text-align: left; }
-  .model-information, .about-project { padding-bottom: 56px; }
-  .model-information .section-heading, .about-project .section-heading { display: block; }
-  .section-intro { margin-top: 14px; }
-  .model-grid, .about-grid { grid-template-columns: 1fr; }
-  .model-card-wide { grid-column: auto; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; transition-duration: .001ms !important; } }
