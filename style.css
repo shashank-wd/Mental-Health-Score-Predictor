@@ -27,17 +27,17 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .noise-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 5; opacity: .02; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 .site-header, .page-section, .site-footer { max-width: 1160px; margin: 0 auto; position: relative; z-index: 1; }
 .site-header { display: flex; align-items: center; justify-content: space-between; padding: 24px 24px 18px; }
-.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--pine-deep); text-decoration: none; }
-.brand-mark { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid #a9ceb8; border-radius: 50%; background: linear-gradient(145deg, var(--pine-deep), var(--pine)); color: #fff; box-shadow: 0 5px 12px rgba(40, 102, 83, .18); }
-.brand-mark svg { width: 35px; height: 35px; overflow: visible; }
+.brand { display: inline-flex; align-items: center; gap: 12px; color: var(--pine-deep); text-decoration: none; }
+.brand-mark { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid #a9ceb8; border-radius: 50%; background: linear-gradient(145deg, var(--pine-deep), var(--pine)); color: #fff; box-shadow: 0 6px 14px rgba(40, 102, 83, .2); }
+.brand-mark svg { width: 42px; height: 42px; overflow: visible; }
 .logo-ring { fill: none; stroke: #c3e3cc; stroke-width: 1.4; opacity: .9; }
 .logo-core { fill: #4c9a78; opacity: .35; }
 .logo-brain { fill: #fff; }
 .logo-fold { fill: none; stroke: var(--pine); stroke-width: 1.2; stroke-linecap: round; }
 .logo-leaf { fill: #d7ee9c; }
 .brand strong, .brand small { display: block; }
-.brand strong { font-size: 13px; letter-spacing: .01em; }
-.brand small { margin-top: 1px; color: var(--ink-soft); font: 10px var(--font-mono); }
+.brand strong { font-size: 15px; letter-spacing: .01em; }
+.brand small { margin-top: 2px; color: var(--ink-soft); font: 10px var(--font-mono); }
 .site-nav { display: flex; gap: 26px; }
 .site-nav a { color: var(--ink-soft); font-size: 12px; text-decoration: none; }
 .site-nav a:hover { color: var(--pine); }
@@ -186,6 +186,10 @@ input:focus, select:focus, .seg-btn:focus-visible, .primary-btn:focus-visible, .
 }
 @media (max-width: 600px) {
   .site-header { padding: 18px 16px; }
+  .brand { gap: 10px; }
+  .brand-mark { width: 42px; height: 42px; }
+  .brand-mark svg { width: 37px; height: 37px; }
+  .brand strong { font-size: 14px; }
   .site-nav { gap: 12px; }
   .site-nav a { font-size: 10px; }
   .site-nav a:last-child { display: none; }
