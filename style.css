@@ -141,7 +141,7 @@ input:focus, select:focus, .seg-btn:focus-visible, .primary-btn:focus-visible, .
 .gauge-fill { stroke: url(#gaugeGradient); stroke-width: 16; stroke-dasharray: 314; stroke-dashoffset: 314; filter: drop-shadow(0 3px 4px rgba(0,0,0,.18)); transition: stroke-dashoffset 1.1s cubic-bezier(.22, 1, .36, 1); }
 .gauge-ticks line { stroke: rgba(255,255,255,.3); stroke-width: 1.5; }
 .gauge-needle-hub { fill: #fff; opacity: .9; }
-.score-readout { display: flex; justify-content: center; align-items: baseline; gap: 4px; margin-top: -25px; }
+.score-readout { display: flex; justify-content: center; align-items: baseline; gap: 4px; margin-top: 6px; }
 .score-number { color: #fff; font: 700 58px var(--font-mono); }
 .score-max { color: rgba(234,243,238,.6); font: 15px var(--font-mono); }
 .score-placeholder { margin: 8px 0 0; color: rgba(234,243,238,.62); font-size: 11px; }

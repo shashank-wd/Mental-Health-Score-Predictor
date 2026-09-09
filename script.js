@@ -231,8 +231,8 @@
     gaugeFill.style.transition = "none";
     gaugeFill.style.strokeDashoffset = String(gaugeLength);
     report.hidden = false;
-    requestAnimationFrame(() => { gaugeFill.style.transition = ""; gaugeFill.style.strokeDashoffset = String(gaugeLength * (1 - Math.max(0.1, clamped / 10))); });
-    animateScore(score);
+    requestAnimationFrame(() => { gaugeFill.style.transition = ""; gaugeFill.style.strokeDashoffset = String(gaugeLength * (1 - clamped / 10)); });
+    animateScore(clamped);
     report.scrollIntoView({ behavior: "smooth", block: "start" });
   }
   function showMessage(title, copy) { resetResultVisual(); errorLabel.textContent = title; errorCopy.textContent = copy; messageSection.hidden = false; messageSection.scrollIntoView({ behavior: "smooth", block: "start" }); }
