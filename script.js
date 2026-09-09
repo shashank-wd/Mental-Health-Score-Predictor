@@ -79,8 +79,69 @@
     };
   }
 
+  const studentQuestionGroups = {
+    academic: [
+      ["academic_workload_overwhelmed", "How often do you feel overwhelmed by your academic workload?", ["Never", "Rarely", "Sometimes", "Often", "Very Often"]],
+      ["academic_performance_worry", "How often do you worry about your academic performance or grades?", ["Never", "Rarely", "Sometimes", "Often", "Very Often"]],
+      ["deadline_stress", "How often do you feel stressed about upcoming exams, assignments, or deadlines?", ["Never", "Rarely", "Sometimes", "Often", "Very Often"]],
+    ],
+    lifestyle: [
+      ["loneliness_disconnection", "How often do you feel lonely or socially disconnected from others?", ["Never", "Rarely", "Sometimes", "Often", "Very Often"]],
+      ["stress_concentration_difficulty", "How often do you have difficulty concentrating because of stress or worries?", ["Never", "Rarely", "Sometimes", "Often", "Very Often"]],
+      ["mental_tiredness", "How often do you feel mentally tired even after getting enough physical rest?", ["Never", "Rarely", "Sometimes", "Often", "Very Often"]],
+      ["social_support", "How supported do you feel by your friends, family, teachers, or college community?", ["Not at all supported", "Slightly supported", "Moderately supported", "Very supported", "Extremely supported"]],
+      ["student_comparison", "How often do you compare your academic or personal progress with other students?", ["Never", "Rarely", "Sometimes", "Often", "Very Often"]],
+    ],
+  };
+
+  function addStudentQuestions(groupName, questions) {
+    const group = [...document.querySelectorAll(".field-group")].find((item) => item.querySelector(".group-label")?.textContent.trim() === groupName);
+    if (!group) return;
+    const grid = document.createElement("div");
+    grid.className = "field-grid two-columns student-question-grid";
+    questions.forEach(([id, labelText, options]) => {
+      const field = document.createElement("div");
+      field.className = "field student-question";
+      const label = document.createElement("label");
+      label.htmlFor = id;
+      label.textContent = labelText;
+      const select = document.createElement("select");
+      select.id = id;
+      select.name = id;
+      select.required = true;
+      select.innerHTML = `<option value="" disabled selected hidden>Select</option>${options.map((option) => `<option value="${option}">${option}</option>`).join("")}`;
+      const error = document.createElement("span");
+      error.className = "error-msg";
+      error.dataset.for = id;
+      field.append(label, select, error);
+      grid.appendChild(field);
+    });
+    group.appendChild(grid);
+    if (groupName === "Academic routine") {
+      const note = document.createElement("p");
+      note.className = "student-question-note";
+      note.textContent = "These additional student-life responses are collected for context; the current prediction model uses its existing supported inputs.";
+      group.appendChild(note);
+    }
+  }
+
+  function collectAssessmentState() {
+    const data = new FormData(form);
+    return {
+      ...collectPayload(),
+      academic_workload_overwhelmed: data.get("academic_workload_overwhelmed") || "",
+      academic_performance_worry: data.get("academic_performance_worry") || "",
+      deadline_stress: data.get("deadline_stress") || "",
+      loneliness_disconnection: data.get("loneliness_disconnection") || "",
+      stress_concentration_difficulty: data.get("stress_concentration_difficulty") || "",
+      mental_tiredness: data.get("mental_tiredness") || "",
+      social_support: data.get("social_support") || "",
+      student_comparison: data.get("student_comparison") || "",
+    };
+  }
+
   function validate(payload, step) {
-    const fieldsByStep = { 1: ["age", "gender", "country"], 2: ["academic_level", "study_hours", "most_used_platform", "purpose_of_use", "avg_daily_usage_hours", "daily_unlocks"], 3: ["physical_activity_hours", "sleep_hours_per_night", "stress_level"] };
+    const fieldsByStep = { 1: ["age", "gender", "country"], 2: ["academic_level", "study_hours", "most_used_platform", "purpose_of_use", "avg_daily_usage_hours", "daily_unlocks", "academic_workload_overwhelmed", "academic_performance_worry", "deadline_stress"], 3: ["physical_activity_hours", "sleep_hours_per_night", "stress_level", "loneliness_disconnection", "stress_concentration_difficulty", "mental_tiredness", "social_support", "student_comparison"] };
     const fields = step ? fieldsByStep[step] : Object.keys(payload);
     const ranges = { age: [10, 100], avg_daily_usage_hours: [0, 24], daily_unlocks: [0, Infinity], study_hours: [0, 24], physical_activity_hours: [0, 24], sleep_hours_per_night: [0, 24] };
     const errors = [];
@@ -153,15 +214,18 @@
   }
   function resetAssessment() { form.reset(); stressInput.value = ""; stressGroup.querySelectorAll(".seg-btn").forEach((button) => button.classList.remove("active")); clearAllErrors(); messageSection.hidden = true; report.hidden = true; updateStep(1); document.getElementById("age").focus(); }
 
+  addStudentQuestions("Academic routine", studentQuestionGroups.academic);
+  addStudentQuestions("Perceived stress", studentQuestionGroups.lifestyle);
   drawTicks();
   stressGroup.querySelectorAll(".seg-btn").forEach((button) => button.addEventListener("click", () => { stressGroup.querySelectorAll(".seg-btn").forEach((item) => item.classList.remove("active")); button.classList.add("active"); stressInput.value = button.dataset.value; clearFieldError(stressInput); }));
-  nextButtons.forEach((button) => button.addEventListener("click", () => { clearAllErrors(); const errors = validate(collectPayload(), currentStep); if (errors.length) { errors.forEach(([input, message]) => setFieldError(input, message)); errors[0][0]?.focus(); return; } updateStep(currentStep + 1); }));
+  nextButtons.forEach((button) => button.addEventListener("click", () => { clearAllErrors(); const errors = validate(collectAssessmentState(), currentStep); if (errors.length) { errors.forEach(([input, message]) => setFieldError(input, message)); errors[0][0]?.focus(); return; } updateStep(currentStep + 1); }));
   backButtons.forEach((button) => button.addEventListener("click", () => updateStep(currentStep - 1)));
   form.querySelectorAll("input, select").forEach((input) => { input.addEventListener("input", () => clearFieldError(input)); input.addEventListener("change", () => clearFieldError(input)); });
   form.addEventListener("submit", async (event) => {
     event.preventDefault(); clearAllErrors(); messageSection.hidden = true;
-    const payload = collectPayload(); const errors = validate(payload);
+    const assessmentState = collectAssessmentState(); const errors = validate(assessmentState);
     if (errors.length) { errors.forEach(([input, message]) => setFieldError(input, message)); errors[0][0]?.focus(); return; }
+    const payload = collectPayload();
     submitBtn.disabled = true; submitBtn.classList.add("loading"); document.querySelector(".assessment-shell").classList.add("is-loading");
     try {
       const response = await fetch(`${API_BASE}/predict`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });

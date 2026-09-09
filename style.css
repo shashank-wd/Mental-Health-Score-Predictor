@@ -113,6 +113,7 @@ input:focus, select:focus, .seg-btn:focus-visible, .primary-btn:focus-visible, .
 .hint { color: #8a978e; font-size: 11px; }
 .error-msg { display: none; color: var(--coral); font-size: 11px; }
 .field-error .error-msg { display: block; }
+.student-question-note { margin: 12px 0 0; color: #8a978e; font-size: 11px; line-height: 1.55; }
 .segmented { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .seg-btn { min-height: 44px; padding: 9px 6px; border: 1.5px solid var(--line); border-radius: var(--radius-sm); background: var(--paper); color: var(--ink-soft); cursor: pointer; font-size: 12px; font-weight: 600; transition: .15s ease; }
 .seg-btn:hover { border-color: #b9c6b7; color: var(--ink); }
