@@ -22,6 +22,7 @@
   const scoreBand = document.getElementById("score-band");
   const scoreContext = document.getElementById("score-context");
   const gaugeFill = document.getElementById("gauge-fill");
+  const scaleMarker = document.getElementById("scale-marker");
   const errorLabel = document.getElementById("error-label");
   const errorCopy = document.getElementById("error-copy");
   const gaugeLength = 314;
@@ -194,6 +195,9 @@
     scoreNumber.textContent = score.toFixed(2);
     scoreBand.textContent = band.label;
     scoreContext.textContent = band.context;
+    const scalePosition = ((10 - clamped) / 9) * 100;
+    scaleMarker.style.setProperty("--scale-position", `${scalePosition}%`);
+    scaleMarker.setAttribute("aria-label", `Predicted wellness score ${score.toFixed(2)} out of 10`);
     document.getElementById("result-explanation").textContent = band.explanation;
     renderSnapshot(payload);
     renderSuggestions(payload);
