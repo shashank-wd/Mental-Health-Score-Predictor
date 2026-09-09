@@ -28,7 +28,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .site-header, .page-section, .site-footer { max-width: 1160px; margin: 0 auto; position: relative; z-index: 1; }
 .site-header { display: flex; align-items: center; justify-content: space-between; padding: 24px 24px 18px; }
 .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--pine-deep); text-decoration: none; }
-.brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; background: var(--pine); color: #fff; font: 700 10px var(--font-mono); letter-spacing: -.08em; }
+.brand-mark { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid #b9d6c4; border-radius: 11px; background: linear-gradient(145deg, var(--pine-deep), var(--pine)); color: #fff; box-shadow: 0 5px 12px rgba(40, 102, 83, .18); }
+.brand-mark svg { width: 29px; height: 29px; overflow: visible; }
+.logo-leaf { fill: #acd7b9; }
+.logo-stem, .logo-signal { fill: none; stroke: #fff; stroke-linecap: round; stroke-linejoin: round; }
+.logo-stem { stroke-width: 1.7; opacity: .7; }
+.logo-signal { stroke-width: 2.2; }
 .brand strong, .brand small { display: block; }
 .brand strong { font-size: 13px; letter-spacing: .01em; }
 .brand small { margin-top: 1px; color: var(--ink-soft); font: 10px var(--font-mono); }
